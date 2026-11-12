@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="id" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Civil Calculator (MCC)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#f97316',
+                        secondary: '#0f172a',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Hubungkan ke file CSS terpisah -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans transition-colors duration-300">
+
+    <!-- Header / Navbar -->
+    <header class="bg-slate-800/80 backdrop-blur-md border-b border-slate-700 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-orange-500 text-white font-bold p-2 rounded-xl shadow-lg shadow-orange-500/30">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-extrabold tracking-tight text-white">My Civil Calculator <span class="text-orange-500 text-sm px-2 py-0.5 bg-orange-500/10 rounded-full border border-orange-500/20">MCC</span></h1>
+                    <p class="text-xs text-slate-400">Analisis & Verifikasi Standar SNI 2847</p>
+                </div>
+            </div>
+            <button onclick="toggleDarkMode()" class="p-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-200 transition-colors">
+                <svg id="theme-icon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-6xl mx-auto px-4 py-8 w-full">
+        <!-- Menu Tabs -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <button onclick="switchTab('column')" id="tab-column" class="tab-btn p-4 rounded-xl border border-orange-500 bg-orange-500/10 text-orange-400 font-semibold flex items-center space-x-3 transition-all shadow-lg shadow-orange-500/5">
+                <span class="p-2 rounded-lg bg-orange-500 text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"/></svg>
+                </span>
+                <div class="text-left">
+                    <div class="text-sm">Menu 1</div>
+                    <div class="text-base font-bold text-white">Square Column Concrete</div>
+                </div>
+            </button>
+
+            <button onclick="switchTab('beam')" id="tab-beam" class="tab-btn p-4 rounded-xl border border-slate-700 bg-slate-800/50 text-slate-400 font-semibold flex items-center space-x-3 transition-all hover:border-slate-600">
+                <span class="p-2 rounded-lg bg-slate-700 text-slate-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                </span>
+                <div class="text-left">
+                    <div class="text-sm">Menu 2</div>
+                    <div class="text-base font-bold text-slate-200">Cantilever Beam Analysis</div>
+                </div>
+            </button>
+
+            <button onclick="switchTab('reinf')" id="tab-reinf" class="tab-btn p-4 rounded-xl border border-slate-700 bg-slate-800/50 text-slate-400 font-semibold flex items-center space-x-3 transition-all hover:border-slate-600">
+                <span class="p-2 rounded-lg bg-slate-700 text-slate-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                </span>
+                <div class="text-left">
+                    <div class="text-sm">Menu 3</div>
+                    <div class="text-base font-bold text-slate-200">4-Bar Column Capacity</div>
+                </div>
+            </button>
+        </div>
+
+        <!-- Calculator Panels -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- Form Input (Left) -->
+            <div class="lg:col-span-7 bg-slate-800/80 backdrop-blur-md border border-slate-700 rounded-2xl p-6 shadow-xl">
+                
+                <!-- MENU 1: Square Column -->
+                <div id="panel-column" class="calc-panel space-y-4">
+                    <h2 class="text-lg font-bold text-white border-b border-slate-700 pb-3 flex items-center justify-between">
+                        <span>Square Column Concrete & Volume</span>
+                        <span class="text-xs bg-orange-500/20 text-orange-400 px-2 py-1 rounded">SNI 2847</span>
+                    </h2>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">Lebar Kolom ($b$ - mm)</label>
+                        <input type="number" id="col-b" value="300" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-orange-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">Tinggi / Tebal Kolom ($h$ - mm)</label>
+                        <input type="number" id="col-h" value="300" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-orange-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">Tinggi Kolom Bersih ($L$ - meter)</label>
+                        <input type="number" id="col-l" value="3.5" step="0.1" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-orange-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">Mutu Beton ($f'_c$ - MPa)</label>
+                        <select id="col-fc" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-orange-500">
+                            <option value="20">fc' 20 MPa (Minimum SNI Struktural)</option>
+                            <option value="25" selected>fc' 25 MPa (Umum)</option>
+                            <option value="30">fc' 30 MPa</option>
+                            <option value="35">fc' 35 MPa</option>
+                        </select>
+                    </div>
+                    <button onclick="calculateColumn()" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-4 rounded-xl transition-all shadow-lg shadow-orange-500/20 mt-4">
+                        Hitung Kebutuhan & Verifikasi SNI
+                    </button>
+                </div>
+
+                <!-- MENU 2: Cantilever Beam -->
+                <div id="panel-beam" class="calc-panel space-y-4 hidden">
+                    <h2 class="text-lg font-bold text-white border-b border-slate-700 pb-3 flex items-center justify-between">
+                        <span>Cantilever Beam Analysis</span>
+                        <span class="text-xs bg-orange-500/20 text-orange-400 px-2 py-1 rounded">SNI Lendutan</span>
+                    </h2>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">Panjang Bentang Kantilever ($L$ - meter)</label>
+                        <input type="number" id="beam-l" value="2.0" step="0.1" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-orange-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">Beban Merata ($q$ - kN/m)</label>
+                        <input type="number" id="beam-q" value="15" step="0.5" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-orange-500">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-1">Lebar Balok ($b$ - mm)</label>
+                            <input type="number" id="beam-b" value="250" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-orange-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-1">Tinggi Balok ($h$ - mm)</label>
+                            <input type="number" id="beam-h" value="400" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-orange-500">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">Modulus Elastisitas Beton ($E_c$ - MPa)</label>
+                        <input type="number" id="beam-e" value="23500" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-orange-500">
+                    </div>
+                    <button onclick="calculateBeam()" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-4 rounded-xl transition-all shadow-lg shadow-orange-500/20 mt-4">
+                        Analisis Momen & Lendutan SNI
+                    </button>
+                </div>
+
+                <!-- MENU 3: 4-Bar Column -->
+                <div id="panel-reinf" class="calc-panel space-y-4 hidden">
+                    <h2 class="text-lg font-bold text-white border-b border-slate-700 pb-3 flex items-center justify-between">
+                        <span>4-Bar Square Column Capacity</span>
+                        <span class="text-xs bg-orange-500/20 text-orange-400 px-2 py-1 rounded">SNI Aksial</span>
+                    </h2>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-1">Lebar Kolom ($b$ - mm)</label>
+                            <input type="number" id="col4-b" value="350" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-orange-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-1">Tinggi Kolom ($h$ - mm)</label>
+                            <input type="number" id="col4-h" value="350" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-orange-500">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">Diameter Tulangan Utama ($D$ - mm)</label>
+                        <select id="col4-dbar" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-orange-500">
+                            <option value="16">D16 mm</option>
+                            <option value="19" selected>D19 mm</option>
+                            <option value="22">D22 mm</option>
+                            <option value="25">D25 mm</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">Beban Aksial Terfaktor Rencana ($P_u$ - kN)</label>
+                        <input type="number" id="col4-pu" value="450" step="10" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-orange-500">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-1">Mutu Beton ($f'_c$ - MPa)</label>
+                            <input type="number" id="col4-fc" value="25" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-orange-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-1">Mutu Baja ($f_y$ - MPa)</label>
+                            <input type="number" id="col4-fy" value="420" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-orange-500">
+                        </div>
+                    </div>
+                    <button onclick="calculateCol4Bar()" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-4 rounded-xl transition-all shadow-lg shadow-orange-500/20 mt-4">
+                        Hitung Kapasitas & Cek SNI
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- Result Display (Right) -->
+            <div class="lg:col-span-5 bg-slate-800/80 backdrop-blur-md border border-slate-700 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
+                <div>
+                    <h3 class="text-lg font-bold text-white border-b border-slate-700 pb-3 mb-4 flex items-center justify-between">
+                        <span>Hasil & Verifikasi SNI</span>
+                        <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
+                    </h3>
+                    <div id="result-content" class="space-y-4 text-slate-300 text-sm">
+                        <div class="text-center py-12 text-slate-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-3 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                            <p>Silakan masukkan parameter data di sebelah kiri dan klik tombol perhitungan untuk melihat hasil analisis struktur.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-6 pt-4 border-t border-slate-700/60 text-xs text-slate-500 text-center">
+                    My Civil Calculator (MCC) &bull; Standar SNI 2847 Structural Engineering
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 border-t border-slate-800 text-center py-4 text-slate-500 text-sm">
+        <p>&copy; 2026 My Civil Calculator (MCC). All rights reserved.</p>
+    </footer>
+
+    <!-- Hubungkan ke file JavaScript terpisah -->
+    <script src="script.js"></script>
+</body>
+</html>
